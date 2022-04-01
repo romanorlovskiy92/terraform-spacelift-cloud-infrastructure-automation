@@ -129,7 +129,7 @@ resource "spacelift_mounted_file" "backend_config" {
 
   stack_id      = spacelift_stack.default[0].id
   relative_path = format("source/%s/backend.auto.tf.json", var.component_root)
-  content       = base64encode(jsonencode({"terraform":"backend":var.backend_type:var.backend_vars}))
+  content       = base64encode(jsonencode({"terraform"={"backend"={var.backend_type=var.backend_vars}}}))
   write_only    = false
 }
 
