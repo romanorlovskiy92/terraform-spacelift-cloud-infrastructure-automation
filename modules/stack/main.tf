@@ -208,7 +208,7 @@ resource "aws_iam_role" "stack_role" {
 resource "aws_iam_role_policy_attachment" "managed_stack_role" {
   count = var.enabled && var.aws_role_enabled && var.worker_type == "shared" ? 1 : 0
 
-  role       = aws_iam_role.stack_role.name
+  role       = aws_iam_role.stack_role[0].name
   policy_arn = "arn:aws:iam::aws:policy/PowerUserAccess"
 }
 
@@ -216,7 +216,7 @@ resource "spacelift_aws_role" "shared_worker" {
   count = var.enabled && var.aws_role_enabled && var.worker_type == "shared" ? 1 : 0
 
   stack_id = spacelift_stack.default[0].id
-  role_arn = aws_iam_role.stack_role.arn
+  role_arn = aws_iam_role.stack_role[0].arn
 }
 
 resource "spacelift_aws_role" "private_worker" {
