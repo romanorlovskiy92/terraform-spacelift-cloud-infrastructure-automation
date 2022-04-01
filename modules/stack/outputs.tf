@@ -10,7 +10,7 @@ output "config" {
     repository          = spacelift_stack.default[0].repository
     branch              = spacelift_stack.default[0].branch
     webhook_id          = join("", spacelift_webhook.default.*.id)
-    aws_role_id         = join("", spacelift_aws_role.default.*.id)
+    aws_role_id         = join("", var.worker_type == "shared" ? spacelift_aws_role.shared_worker.*.id : spacelift_aws_role.private_worker.*.id)
     stack_destructor_id = join("", spacelift_stack_destructor.default.*.id)
   }, "disabled")
 }
