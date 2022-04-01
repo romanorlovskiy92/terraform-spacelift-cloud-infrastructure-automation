@@ -89,6 +89,18 @@ variable "component_env" {
   description = "Map of component ENV variables"
 }
 
+variable "backend_type" {
+  type        = any
+  default     = {}
+  description = "Terraform backend type"
+}
+
+variable "backend_vars" {
+  type        = any
+  default     = {}
+  description = "Terraform backend values to be applied to the stack via a mounted file"
+}
+
 variable "autodeploy" {
   type        = bool
   description = "Controls the Spacelift 'autodeploy' option for a stack"

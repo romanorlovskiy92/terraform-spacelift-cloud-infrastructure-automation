@@ -124,6 +124,15 @@ resource "spacelift_mounted_file" "stack_config" {
   write_only    = false
 }
 
+resource "spacelift_mounted_file" "backend_config" {
+  count = var.enabled ? 1 : 0
+
+  stack_id      = spacelift_stack.default[0].id
+  relative_path = format("source/%s/backend.auto.tf.json", var.component_root)
+  content       = base64encode(jsonencode({"terraform":"backend":var.backend_type:var.backend_vars}))
+  write_only    = false
+}
+
 resource "spacelift_environment_variable" "stack_name" {
   count = var.enabled ? 1 : 0
 

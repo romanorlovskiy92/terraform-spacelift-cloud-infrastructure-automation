@@ -59,6 +59,8 @@ module "stacks" {
   component_name            = each.value.component
   component_vars            = each.value.vars
   component_env             = each.value.env
+  backend_type              = each.value.backend_type
+  backend_vars              = each.value.backend
   terraform_workspace       = each.value.workspace
   labels                    = each.value.labels
 
