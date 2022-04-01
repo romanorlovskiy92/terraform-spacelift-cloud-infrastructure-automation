@@ -167,12 +167,6 @@ variable "worker_type" {
   default     = "private"
 }
 
-variable "region" {
-  type        = string
-  description = "AWS Region"
-  default     = null
-}
-
 variable "aws_role_enabled" {
   type        = bool
   description = "Flag to enable/disable Spacelift to use AWS STS to assume the supplied IAM role and put its temporary credentials in the runtime environment"
