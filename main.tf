@@ -105,6 +105,7 @@ module "stacks" {
   aws_role_enabled     = try(each.value.settings.spacelift.aws_role_enabled, null) != null ? each.value.settings.spacelift.aws_role_enabled : var.aws_role_enabled
   aws_role_arn         = try(each.value.settings.spacelift.aws_role_arn, null) != null ? each.value.settings.spacelift.aws_role_arn : var.aws_role_arn
   aws_role_external_id = try(each.value.settings.spacelift.aws_role_external_id, null) != null ? each.value.settings.spacelift.aws_role_external_id : var.aws_role_external_id
+  worker_type          = try(each.value.settings.spacelift.worker_type, null) != null ? each.value.settings.spacelift.worker_type : var.worker_type
 
   aws_role_generate_credentials_in_worker = try(each.value.settings.spacelift.aws_role_generate_credentials_in_worker, null) != null ? (
     each.value.settings.spacelift.aws_role_generate_credentials_in_worker

@@ -185,8 +185,42 @@ resource "spacelift_drift_detection" "default" {
   schedule  = var.drift_detection_schedule
 }
 
-resource "spacelift_aws_role" "default" {
-  count = var.enabled && var.aws_role_enabled ? 1 : 0
+# Linking AWS role to the Spacelift stack.
+
+# Creating an IAM role.
+resource "aws_iam_role" "stack_role" {
+  count = var.enabled && var.aws_role_enabled && var.worker_type == "shared" ? 1 : 0
+
+  name = "SPACELIFT_STACK-${var.stack_name}"
+
+  # Setting up the trust relationship.
+  assume_role_policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      jsondecode(
+        spacelift_stack.default[0].aws_assume_role_policy_statement
+      )
+    ]
+  })
+}
+
+# Attaching a powerful administrative policy to the stack role.
+resource "aws_iam_role_policy_attachment" "managed_stack_role" {
+  count = var.enabled && var.aws_role_enabled && var.worker_type == "shared" ? 1 : 0
+
+  role       = aws_iam_role.stack_role.name
+  policy_arn = "arn:aws:iam::aws:policy/PowerUserAccess"
+}
+
+resource "spacelift_aws_role" "shared_worker" {
+  count = var.enabled && var.aws_role_enabled && var.worker_type == "shared" ? 1 : 0
+
+  stack_id = spacelift_stack.default[0].id
+  role_arn = aws_iam_role.stack_role.arn
+}
+
+resource "spacelift_aws_role" "private_worker" {
+  count = var.enabled && var.aws_role_enabled && var.aws_role_arn != null && var.worker_type == "private" ? 1 : 0
 
   stack_id                       = spacelift_stack.default[0].id
   role_arn                       = var.aws_role_arn
@@ -213,7 +247,8 @@ resource "spacelift_stack_destructor" "default" {
     spacelift_environment_variable.component_name,
     spacelift_environment_variable.component_env_vars,
     spacelift_policy_attachment.default,
-    spacelift_aws_role.default
+    spacelift_aws_role.shared_worker,
+    spacelift_aws_role.private_worker
   ]
 }
 

@@ -161,6 +161,12 @@ variable "drift_detection_schedule" {
   default     = ["0 4 * * *"]
 }
 
+variable "worker_type" {
+  type        = string
+  description = "Type of Spacelift worker"
+  default     = "private"
+}
+
 variable "aws_role_enabled" {
   type        = bool
   description = "Flag to enable/disable Spacelift to use AWS STS to assume the supplied IAM role and put its temporary credentials in the runtime environment"
